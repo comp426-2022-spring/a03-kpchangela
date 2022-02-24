@@ -1,6 +1,4 @@
-import { coinFlip, coinFlips, countFlips, flipACoin } from './coin.mjs'
 import { createRequire } from 'module';
-
 const require = createRequire(import.meta.url)
 
 const express = require('express')
@@ -58,3 +56,63 @@ app.get('/app/flip/call/heads', (req, res) => {
 app.get('/app/flip/call/tails', (req, res) => {
     res.status(200).json(flipACoin('tails'))
 })
+
+const HEADS = 'heads'
+const TAILS = 'tails'
+const WIN = 'win'
+const LOSE = 'lose'
+
+function coinFlip() {
+  return (Math.round(Math.random()) == 0) ? HEADS : TAILS
+}
+
+function coinFlips(flips) {
+  var allFlips = [];
+
+  for (let i = 0; i < flips; i++) {
+    allFlips.push(coinFlip())
+  }
+
+  return allFlips
+}
+
+function countFlips(array) {
+  var summary = {
+    heads: 0,
+    tails: 0
+  }
+  // TODO: account for undefined input?
+  array.forEach(flip => {
+    if (flip === HEADS) {
+      summary.heads++
+    } else if (flip === TAILS) {
+      summary.tails++
+    }
+  })
+
+  // Remove uneccessary properties.
+  if (summary.heads == 0) {
+    delete summary.heads
+  } else if (summary.tails == 0) {
+    delete summary.tails
+  }
+
+  return summary
+}
+
+function flipACoin(call) {
+  if (call === HEADS || call === TAILS) {
+    var resultsSummary = {
+      call: call,
+      flip: coinFlip(),
+      result: null
+    }
+
+    resultsSummary.result = ((resultsSummary.call === resultsSummary.flip) ? WIN : LOSE)
+    return resultsSummary
+  } else if (call === "" || call == null) {
+    throw 'Error: no input.'
+  } else {
+    throw 'Usage: node guess-flip --call=[heads|tails]'
+  }
+}
