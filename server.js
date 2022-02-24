@@ -14,7 +14,7 @@ const port = argPort || process.env.PORT || 3000
 
 // Start an app server
 const server = app.listen(port, () => {
-    console.log('App listening on port %PORT%'.replace('%PORT%',HTTP_PORT))
+    console.log('App listening on port %PORT%'.replace('%PORT%', port))
 });
 
 // Default response for any other request
